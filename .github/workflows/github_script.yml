@@ -22,11 +22,13 @@ jobs:
         id: run-script
         run: |
           wget https://raw.githubusercontent.com/Ensign-College/CS105_Tests/main/Lab5bTest.py
-          result=$(python Lab5bTest.py)
+          result=$(python Lab5bTest.py 2>&1 | tee output.txt)
+          cat output.txt
           if [[ $result == *"Your code works"* ]]; then
-              echo "::set-output name=script-output::Script run.py executed successfully with output: $result"
+              echo "::set-output name=script-output::Script executed successfully with output: $result"
           else
-              echo "::set-output name=script-output::Script run.py failed with output: $result"
+              error=$(cat output.txt)
+              echo "::set-output name=script-output::Script failed with output: $error"
           fi
 
       - name: Comment on PR
